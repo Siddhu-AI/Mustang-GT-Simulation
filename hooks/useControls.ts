@@ -12,27 +12,31 @@ export const useControls = () => {
     indicatorRight: false,
     cameraToggle: false,
     repair: false,
-    fly: false,
+    flyMode: false, // Changed to a persistent toggle
+    up: false,      // ArrowUp
+    down: false,    // ArrowDown
   });
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (e.code) {
         case 'KeyW':
-        case 'ArrowUp':
           setControls((c) => ({ ...c, forward: true }));
           break;
         case 'KeyS':
-        case 'ArrowDown':
           setControls((c) => ({ ...c, backward: true }));
           break;
         case 'KeyA':
-        case 'ArrowLeft':
           setControls((c) => ({ ...c, left: true }));
           break;
         case 'KeyD':
-        case 'ArrowRight':
           setControls((c) => ({ ...c, right: true }));
+          break;
+        case 'ArrowUp':
+          setControls((c) => ({ ...c, up: true }));
+          break;
+        case 'ArrowDown':
+          setControls((c) => ({ ...c, down: true }));
           break;
         case 'Space':
           setControls((c) => ({ ...c, brake: true }));
@@ -50,7 +54,8 @@ export const useControls = () => {
           setControls((c) => ({ ...c, repair: true }));
           break;
         case 'KeyF':
-          setControls((c) => ({ ...c, fly: true }));
+          // Toggle flight mode on press
+          setControls((c) => ({ ...c, flyMode: !c.flyMode }));
           break;
       }
     };
@@ -58,20 +63,22 @@ export const useControls = () => {
     const handleKeyUp = (e: KeyboardEvent) => {
       switch (e.code) {
         case 'KeyW':
-        case 'ArrowUp':
           setControls((c) => ({ ...c, forward: false }));
           break;
         case 'KeyS':
-        case 'ArrowDown':
           setControls((c) => ({ ...c, backward: false }));
           break;
         case 'KeyA':
-        case 'ArrowLeft':
           setControls((c) => ({ ...c, left: false }));
           break;
         case 'KeyD':
-        case 'ArrowRight':
           setControls((c) => ({ ...c, right: false }));
+          break;
+        case 'ArrowUp':
+          setControls((c) => ({ ...c, up: false }));
+          break;
+        case 'ArrowDown':
+          setControls((c) => ({ ...c, down: false }));
           break;
         case 'Space':
           setControls((c) => ({ ...c, brake: false }));
@@ -81,9 +88,6 @@ export const useControls = () => {
           break;
         case 'KeyR':
           setControls((c) => ({ ...c, repair: false }));
-          break;
-        case 'KeyF':
-          setControls((c) => ({ ...c, fly: false }));
           break;
       }
     };
