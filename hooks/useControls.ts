@@ -12,9 +12,10 @@ export const useControls = () => {
     indicatorRight: false,
     cameraToggle: false,
     repair: false,
-    flyMode: false, // Changed to a persistent toggle
-    up: false,      // ArrowUp
-    down: false,    // ArrowDown
+    respawn: false, // New control
+    flyMode: false,
+    up: false,
+    down: false,
   });
 
   useEffect(() => {
@@ -51,10 +52,13 @@ export const useControls = () => {
           setControls((c) => ({ ...c, cameraToggle: true }));
           break;
         case 'KeyR':
-          setControls((c) => ({ ...c, repair: true }));
+          if (e.shiftKey) {
+            setControls((c) => ({ ...c, respawn: true, repair: false }));
+          } else {
+            setControls((c) => ({ ...c, repair: true, respawn: false }));
+          }
           break;
         case 'KeyF':
-          // Toggle flight mode on press
           setControls((c) => ({ ...c, flyMode: !c.flyMode }));
           break;
       }
@@ -87,7 +91,7 @@ export const useControls = () => {
           setControls((c) => ({ ...c, cameraToggle: false }));
           break;
         case 'KeyR':
-          setControls((c) => ({ ...c, repair: false }));
+          setControls((c) => ({ ...c, repair: false, respawn: false }));
           break;
       }
     };

@@ -72,12 +72,15 @@ const App: React.FC = () => {
              <kbd className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-900 mr-2 border border-slate-300">↑↓</kbd> Vertical
            </div>
            <div className="bg-white/90 backdrop-blur-xl border border-slate-200 px-4 py-2 rounded-md text-slate-700 text-[9px] uppercase tracking-widest font-bold shadow-sm">
-             <kbd className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-900 mr-2 border border-slate-300">R</kbd> Repair
+             <kbd className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-900 mr-2 border border-slate-300">⇧R</kbd> Respawn
+           </div>
+           <div className="bg-white/90 backdrop-blur-xl border border-slate-200 px-4 py-2 rounded-md text-slate-700 text-[9px] uppercase tracking-widest font-bold shadow-sm col-span-2">
+             <kbd className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-900 mr-2 border border-slate-300">R</kbd> Repair Engine
            </div>
         </div>
       </div>
 
-      <div className="absolute top-52 left-6 pointer-events-auto bg-white/90 backdrop-blur-xl border border-slate-200 p-4 rounded-xl shadow-lg w-48 flex flex-col gap-2">
+      <div className="absolute top-[260px] left-6 pointer-events-auto bg-white/90 backdrop-blur-xl border border-slate-200 p-4 rounded-xl shadow-lg w-48 flex flex-col gap-2">
         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex justify-between">
           <span>Steering Sens</span>
           <span className="text-orange-600">{(sensitivity * 100).toFixed(0)}%</span>

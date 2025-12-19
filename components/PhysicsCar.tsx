@@ -34,8 +34,19 @@ const PhysicsCar: React.FC<PhysicsCarProps> = ({ onStateUpdate, cameraView, sens
   useFrame((state, delta) => {
     if (!carRef.current) return;
 
+    // REPAIR LOGIC
     if (controls.repair) {
       damage.current = 0;
+    }
+
+    // RESPAWN LOGIC
+    if (controls.respawn) {
+      carRef.current.position.set(0, 0, 0);
+      carRef.current.rotation.set(0, 0, 0);
+      speed.current = 0;
+      verticalVelocity.current = 0;
+      steering.current = 0;
+      damage.current = 0; // Usually respawn also implies a fix
     }
 
     // VERTICAL CONTROL (ARROW KEYS)
