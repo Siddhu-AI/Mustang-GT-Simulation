@@ -1,0 +1,5 @@
+{
+  "name": "Mustang GT Simulatiom",
+  "description": "A comprehensive 3D car driving simulator with first-person and third-person views, real-time physics, and an AI driving instructor powered by Gemini.",
+  "requestFramePermissions": []
+}
