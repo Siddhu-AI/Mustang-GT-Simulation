@@ -4,6 +4,11 @@ export enum CameraView {
   ThirdPerson = 'THIRD_PERSON'
 }
 
+export enum PlayerMode {
+  Driving = 'DRIVING',
+  Walking = 'WALKING'
+}
+
 export interface CarState {
   speed: number;
   gear: number;

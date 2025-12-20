@@ -1,7 +1,8 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+// Initialize the GoogleGenAI client using process.env.API_KEY directly
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const getDrivingInstruction = async (topic: string) => {
   try {
@@ -21,7 +22,9 @@ export const getDrivingInstruction = async (topic: string) => {
       }
     });
     
-    return JSON.parse(response.text);
+    // Extract generated text using the .text property and parse as JSON
+    const jsonStr = response.text.trim();
+    return JSON.parse(jsonStr);
   } catch (error) {
     console.error("Gemini instruction error:", error);
     return {

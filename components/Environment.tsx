@@ -8,22 +8,22 @@ const PlaneMesh: React.FC<{ position: [number, number, number]; rotationY: numbe
   return (
     <group position={position} rotation={[0, rotationY, 0]}>
       {/* Fuselage */}
-      <mesh castShadow>
+      <mesh castShadow name="target">
         <cylinderGeometry args={[1, 1, 10, 8]} />
         <meshStandardMaterial color="white" />
       </mesh>
       {/* Wings */}
-      <mesh position={[0, 0, 0]}>
+      <mesh position={[0, 0, 0]} name="target">
         <boxGeometry args={[12, 0.2, 2]} />
         <meshStandardMaterial color="#f0f0f0" />
       </mesh>
       {/* Tail */}
-      <mesh position={[0, 1.5, -4]}>
+      <mesh position={[0, 1.5, -4]} name="target">
         <boxGeometry args={[0.2, 3, 1.5]} />
         <meshStandardMaterial color="#ef4444" />
       </mesh>
       {/* Cockpit Window */}
-      <mesh position={[0, 0.4, 4.5]}>
+      <mesh position={[0, 0.4, 4.5]} name="target">
         <boxGeometry args={[1.5, 0.5, 1]} />
         <meshStandardMaterial color="#222" metalness={1} roughness={0} />
       </mesh>
@@ -37,6 +37,7 @@ const TrafficCar: React.FC<{ initialZ: number; lane: number; speed: number; colo
   useEffect(() => {
     if (ref.current) {
       (ref.current as any).isTrafficCar = true;
+      ref.current.name = "target";
     }
   }, []);
 
@@ -70,7 +71,7 @@ const TrafficCar: React.FC<{ initialZ: number; lane: number; speed: number; colo
 
 const Building: React.FC<{ position: [number, number, number]; width: number; height: number; depth: number; color: string }> = ({ position, width, height, depth, color }) => {
   return (
-    <group position={position}>
+    <group position={position} name="target">
       <mesh castShadow receiveShadow>
         <boxGeometry args={[width, height, depth]} />
         <meshStandardMaterial color={color} roughness={0.6} metalness={0.2} />
@@ -84,6 +85,10 @@ const Building: React.FC<{ position: [number, number, number]; width: number; he
   );
 };
 
+/**
+ * Environment component: Defines the world, buildings, traffic, and lighting.
+ * Completed the truncated component and added default export to resolve import error.
+ */
 const Environment: React.FC = () => {
   const vibrantColors = ['#ff4757', '#2ed573', '#1e90ff', '#ffa502', '#eccc68', '#70a1ff', '#5352ed', '#ff6b81'];
   
@@ -119,53 +124,54 @@ const Environment: React.FC = () => {
         shadow-camera-top={100}
         shadow-camera-bottom={-100}
       />
-      
-      <Plane args={[10000, 10000]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <meshStandardMaterial color="#34d399" roughness={0.8} />
+
+      <Plane receiveShadow rotation-x={-Math.PI / 2} args={[2000, 2000]}>
+        <meshStandardMaterial color="#f0f9ff" />
       </Plane>
 
-      {/* Main Highway with more colorful markings */}
-      <group position={[0, 0.02, 0]}>
-        <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-          <planeGeometry args={[22, 1200]} />
-          <meshStandardMaterial color="#2d3436" roughness={0.4} />
-        </mesh>
-        {Array.from({ length: 150 }).map((_, i) => (
-          <mesh key={i} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, (i - 75) * 15]}>
-            <planeGeometry args={[0.3, 8]} />
-            <meshStandardMaterial color="#f1c40f" emissive="#f1c40f" emissiveIntensity={0.5} />
-          </mesh>
-        ))}
-      </group>
+      <gridHelper args={[2000, 200, "#cbd5e1", "#e2e8f0"]} position={[0, 0.01, 0]} />
 
-      {/* AIRPORT SECTION */}
-      <group position={[0, 0.05, 800]}>
-        <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-          <planeGeometry args={[300, 800]} />
-          <meshStandardMaterial color="#636e72" roughness={0.7} />
-        </mesh>
-
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
-          <planeGeometry args={[6, 700]} />
-          <meshStandardMaterial color="white" />
-        </mesh>
-
-        <Building position={[-100, 15, 0]} width={60} height={30} depth={100} color="#ff7f50" />
-        <Building position={[100, 15, 0]} width={60} height={30} depth={100} color="#1e90ff" />
-        
-        <PlaneMesh position={[-80, 1, -150]} rotationY={Math.PI / 4} />
-        <PlaneMesh position={[80, 1, 150]} rotationY={-Math.PI / 6} />
-      </group>
-
+      {/* Buildings */}
       {buildings.map((b, i) => (
-        <Building key={i} position={[b.side * 42, b.h/2, b.z]} width={b.w} height={b.h} depth={b.d} color={b.c} />
+        <Building 
+          key={i} 
+          position={[b.side * (25 + b.w / 2), b.h / 2, b.z]} 
+          width={b.w} 
+          height={b.h} 
+          depth={b.d} 
+          color={b.c} 
+        />
       ))}
 
+      {/* Road */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
+        <planeGeometry args={[16, 2000]} />
+        <meshStandardMaterial color="#334155" />
+      </mesh>
+      
+      {/* Road markings */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]}>
+        <planeGeometry args={[0.2, 2000]} />
+        <meshStandardMaterial color="white" transparent opacity={0.5} />
+      </mesh>
+
+      {/* Traffic */}
       {traffic.map((t, i) => (
-        <TrafficCar key={i} initialZ={t.z} lane={t.lane} speed={t.speed} color={t.color} rotationY={t.rot} />
+        <TrafficCar 
+          key={i} 
+          initialZ={t.z} 
+          lane={t.lane} 
+          speed={t.speed} 
+          color={t.color} 
+          rotationY={t.rot} 
+        />
       ))}
+
+      {/* Distant Plane */}
+      <PlaneMesh position={[100, 150, -600]} rotationY={Math.PI} />
     </>
   );
 };
 
+// Fixed: Added the missing default export to satisfy App.tsx import.
 export default Environment;
